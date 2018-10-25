@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.BannerDao">
+
+    <select id="getBannerByAll" resultType="Banner">
+      SELECT * FROM banner LIMIT #{start},#{end}
+    </select>
+    <select id="getCount" resultType="int">
+      SELECT COUNT(*) FROM banner
+    </select>
+    <update id="updateBannerById">
+        UPDATE banner SET status=#{status} WHERE id=#{id}
+    </update>
+    <insert id="addBanner">
+        INSERT INTO banner VALUES(0,#{name},#{url},0,#{createDate},#{description})
+    </insert>
+    <delete id="deleteId">
+        DELETE FROM banner where id=#{id}
+    </delete>
+
+</mapper>
