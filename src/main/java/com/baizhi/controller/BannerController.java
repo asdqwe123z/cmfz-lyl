@@ -23,8 +23,8 @@ public class BannerController {
     private BannerService service;
     @RequestMapping("/getBannerAll")
     public @ResponseBody Map getBannerAll(int page,int rows){
-        System.out.println(page+"=="+rows);
-        System.out.println(service.getAll(page,rows));
+        //System.out.println(page+"=="+rows);
+        //System.out.println(service.getAll(page,rows));
         return service.getAll(page,rows);
     }
     @RequestMapping("/updateBanner")
@@ -36,21 +36,13 @@ public class BannerController {
     @RequestMapping("/addBanner")
     public @ResponseBody boolean addBanner(Banner banner, MultipartFile tupian) {
         System.out.println("111111111");
-
-
         try {
-            String filename = tupian.getOriginalFilename();
-            String filenames = new Date().getTime() + "-" + filename;
-            banner.setUrl("\\img\\"+filenames);
-            service.addBanner(banner);
-            File file = new File("E:/JavaEE/source/cmfz-lyl/src/main/webapp/img/" + filenames);
-            tupian.transferTo(file);
+            service.addBanner(banner,tupian);
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
-
     }
     @RequestMapping("/deleteId")
     public @ResponseBody boolean deleteId(int id){

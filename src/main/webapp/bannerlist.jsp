@@ -7,24 +7,13 @@
             $('#dg').edatagrid({
                 fit: true,
                 pagination:true,
-                destroyMsg:{norecord:{
-                    // 在没有记录选择的时候执行
-                    title:"请选择删除项",
-
-                    msg:"你没有选择要删除的行"
-                },
-                    confirm:{       // 在选择一行的时候执行
-                        title:"请确认",
-                        msg:"你真的要删除吗?"
-                    }},
                 fitColumns:true,
                 pageSize: 5,
                 pageList: [3, 5, 7],
                 url:"${pageContext.request.contextPath}/getBannerAll",
                 updateUrl: "${pageContext.request.contextPath}/updateBanner",
-                destroyUrl:"${pageContext.request.contextPath}/deleteId",
                 columns:[[
-                    {field:"id",width:80},
+                    {field:"id",hidden:true},
                     {field:'name',title:'标题',width:80},
                     { field: 'status', title: '状态', width: 100, editor: {type: "text",options: {required: true}
                     }
@@ -56,8 +45,21 @@
                     iconCls: 'icon-remove',
                     text: "删除",
                     handler: function () {
-                       var a= $("#dg").edatagrid("destroyRow");
+                        var row= $("#dg").edatagrid("getSelected");
+                        alert(row.id);
+                        $.ajax({
+                            url:"${pageContext.request.contextPath}/deleteId",
+                            data:"id="+row.id,
+                            success:function(data){
+                                if(data){
+                                    $.messager.alert("消息提醒","成功","info");
+                                }else{
+                                    $.messager.alert("消息提醒","失败","error");
+                                }
+                                $("#dg").edatagrid("load");
 
+                            },
+                        });
 
                     }
 

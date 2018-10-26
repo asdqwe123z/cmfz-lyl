@@ -1,7 +1,7 @@
 package com.baizhi.service;
 
-import com.baizhi.dao.BannerDao;
-import com.baizhi.entity.Banner;
+import com.baizhi.dao.AlbumDao;
+import com.baizhi.entity.Album;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,34 +16,33 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by jia on 2018/10/24.
+ * Created by jia on 2018/10/25.
  */
 @Service
-public class BannerServiceImpl implements BannerService{
+public class AlbumServiceImpl implements AlbumService {
     @Autowired
-    private BannerDao dao;
+    private AlbumDao dao;
     @Autowired
     HttpServletRequest request;
     @Override
-    public Map getAll(int page, int rows) {
+    public Map selectAlbumAll(int page, int rows) {
         Map map=new HashMap();
         int start=(page-1)*rows;
         int end=page*rows;
-        List<Banner>list=dao.getBannerByAll(start,end);
-        int count=dao.getCount();
+        List<Album>list=dao.selectAlbumAll(start,end);
+        int count=dao.selectAlbumCount();
         map.put("rows",list);
         map.put("total",count);
         return map;
     }
 
     @Override
-    public void updataBanner(int id, int status) {
-        dao.updateBannerById(id,status);
+    public String selectAlbumId(int id) {
+        return dao.selectAlbumId(id);
     }
 
     @Override
-    public void addBanner(Banner banner,MultipartFile tupian) throws IOException {
-        //获取要储存的文件路径
+    public void addAlbumAll(Album album,MultipartFile tupian) throws IOException {
         String path=request.getSession().getServletContext().getRealPath("/");
         File file=new File(path+"/img");
         //获取文件名
@@ -56,14 +55,10 @@ public class BannerServiceImpl implements BannerService{
         String ssd=s+"."+s1;
         //将新名字存入对象中,
         String url="\\img\\"+ssd;
-        banner.setUrl(url);
+        album.setCoverImg(url);
         //进行文件上传
         tupian.transferTo(new File(file,ssd));
-        dao.addBanner(banner);
-    }
-
-    @Override
-    public void deleteId(int id) {
-        dao.deleteId(id);
+        System.out.println(album);
+        dao.addAlbumAll(album);
     }
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.AlbumDao">
+    <resultMap id="AlbumMap" type="Album">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="coverImg" property="coverImg"/>
+        <result column="count" property="count"/>
+        <result column="score" property="score"/>
+        <result column="author" property="author"/>
+        <result column="broadCast" property="broadCast"/>
+        <result column="brief" property="brief"/>
+        <result column="publishDate" property="publishDate"/>
+        <collection property="children" ofType="Chapter">
+            <result column="ids" property="id"/>
+            <result column="names" property="name"/>
+            <result column="url" property="url"/>
+            <result column="size" property="size"/>
+            <result column="duration" property="duration"/>
+            <result column="aid" property="aid"/>
+        </collection>
+    </resultMap>
+    <select id="selectAlbumAll" resultMap="AlbumMap">
+        SELECT f.*,z.id ids,z.name names,z.url,z.size,z.duration FROM album f INNER JOIN chapter z ON f.id=z.aid LIMIT #{start},#{end}
+    </select>
+    <select id="selectAlbumCount" resultType="int">
+        SELECT count(*) FROM album
+    </select>
+    <select id="selectAlbumId" resultType="String">
+        SELECT brief FROM album WHERE id=#{id}
+    </select>
+    <insert id="addAlbumAll">
+        INSERT INTO album VALUES (0,#{name},#{coverImg},#{count},#{score},#{author},#{broadCast},#{brief},#{publishDate})
+    </insert>
+</mapper>
