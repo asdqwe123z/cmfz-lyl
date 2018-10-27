@@ -6,12 +6,16 @@
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/themes/default/easyui.css">
 	<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" href="css/common.css" type="text/css">
 	<link rel="stylesheet" href="css/login.css" type="text/css">
+	<link rel="stylesheet" href="css/login.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/themes/icon.css">
 	<script type="text/javascript" src="script/jquery.js"></script>
 	<script type="text/javascript" src="script/common.js"></script>
+	<script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+
 	<script type="text/javascript">
 	
 		$(function(){
@@ -20,24 +24,42 @@
                 var time= new Date();
                 $("#captchaImage").prop("src","${RequestScope.request.contextPath}/app/getKaptchaImage?time="+time.getTime());
             });
-            //  form 表单提交
-            /*$("#loginForm").form("submit", {
-                url:"login",
-                onSubmit: function(){
-                    // do some check
-                    // return false to prevent submit;
-                },
-                success:function(data){
-                    alert(data)
-                }*/
+            $("#username").validatebox({
+                required:true,
+                validType:"length[6,10]",
+                missingMessage:"用户名不能为空",
+                invalidMessage:"用户名需要4-16位"
+            });
+            $("#pwd").validatebox({
+                required:true,
+                validType:"length[6,16]",
+                missingMessage:"密码不能为空",
+                invalidMessage:"密码需要4-10位"
+            });
 
         });
-
+        function loginadd(){
+            $("#loginForm").form("submit", {
+                url:"${pageContext.request.contextPath}/login",
+                onSubmit: function(){
+                    var isok=$(this).form("validate");
+                    return isok;
+                },
+                success:function(data){
+                    alert(data);
+                    if(data=="true"){
+                       window.location.href="${pageContext.request.contextPath}/main/main.jsp"
+                    }else{
+                        alert("登陆失败，请重新登陆");
+                    }
+                }
+            });
+        }
 	</script>
 </head>
 <body>
 	
-		<div class="login">
+		<div class="login" id="dologin">
 			<form id="loginForm" action="${pageContext.request.contextPath}/login" method="post" >
 				
 				<table>
@@ -50,7 +72,7 @@
 								用户名:
 							</th>
 							<td>
-								<input type="text"  name="name" class="text" value="xxx" maxlength="20"/>
+								<input id="username" type="text"  name="name" class="text"  maxlength="20"/>
 							</td>
 					  </tr>
 					  <tr>
@@ -58,7 +80,7 @@
 								密&nbsp;&nbsp;&nbsp;码:
 							</th>
 							<td>
-								<input type="password" name="password" class="text" value="xxx" maxlength="20" autocomplete="off"/>
+								<input id="pwd" type="password" name="password" class="text" maxlength="20" autocomplete="off"/>
 							</td>
 					  </tr>
 					
@@ -82,7 +104,7 @@
 						<td>&nbsp;</td>
 						<th>&nbsp;</th>
 						<td>
-							<input type="button" class="homeButton" value="" onclick="location.href='/'"><input type="submit" class="loginButton"  value="登录">
+							<input type="button" class="homeButton" value="" onclick="location.href='/'"><input type="button" onclick="loginadd()" class="loginButton"  value="登录">
 						</td>
 					</tr>
 				</tbody></table>

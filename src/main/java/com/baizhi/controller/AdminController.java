@@ -6,6 +6,7 @@ import com.google.code.kaptcha.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,16 +20,17 @@ public class AdminController {
     private AdminService service;
 
     @RequestMapping("/login")
-    public String login(String enCode,Admin admin, HttpServletRequest request){
+    public @ResponseBody boolean login(String enCode, Admin admin, HttpServletRequest request){
         HttpSession session=request.getSession();
         Admin admin1=service.login(admin);
+        System.out.println(admin1);
         String code= (String) session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
 
         if(admin1!=null && enCode.equals(code)){
 
-            return "redirect:/main/main.jsp";
+            return true;
         }else {
-                return "redirect:/login.jsp";
+            return false;
         }
 
     }
